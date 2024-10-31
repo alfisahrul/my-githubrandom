@@ -1,0 +1,89 @@
+
+
+.Trigger {
+	all: unset;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	padding: 0 15px;
+	font-size: 16px;
+	line-height: 1;
+	height: 50px;
+	width: 200px;
+	gap: 10px;
+	background-color: #333; /* Dark background */
+	color: #e0e0e0; /* Light text color */
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+	&:hover {
+		background-color: #444; /* Slightly lighter dark */
+	}
+	&:focus {
+		box-shadow: 0 0 0 2px #888; /* Darker focus ring */
+	}
+	&[data-placeholder] {
+		color: #aaa; /* Darker placeholder */
+	}
+}
+
+.Icon {
+	color: #e0e0e0; /* Light icon color */
+}
+
+.Content {
+	overflow: hidden;
+	background-color: #222; /* Dark content background */
+	border-radius: 6px;
+	box-shadow:
+		0px 10px 38px -10px rgba(0, 0, 0, 0.5),
+		0px 10px 20px -15px rgba(0, 0, 0, 0.3);
+}
+
+.Viewport {
+	padding: 5px;
+}
+
+.Item {
+	font-size: 16px;
+	line-height: 1;
+	color: #e0e0e0; /* Light text color */
+	border-radius: 3px;
+	display: flex;
+	align-items: center;
+	height: 40px;
+	padding: 0 35px 0 25px;
+	position: relative;
+	user-select: none;
+	&[data-disabled] {
+		color: #666; /* Darker disabled color */
+		pointer-events: none;
+	}
+	&[data-highlighted] {
+		outline: none;
+		background-color: #555; /* Highlight background */
+		color: #fff; /* Highlighted text color */
+	}
+}
+
+.Label {
+	padding: 0 25px;
+	font-size: 12px;
+	line-height: 25px;
+	color: #aaa; /* Light label color */
+}
+
+.Separator {
+	height: 1px;
+	background-color: #555; /* Dark separator color */
+	margin: 5px;
+}
+
+.ItemIndicator {
+	position: absolute;
+	left: 0;
+	width: 25px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
