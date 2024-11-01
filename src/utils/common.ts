@@ -1,6 +1,6 @@
 export interface CommonResponse<T> {
-    successOrNot : string;
-    statusCode: string;
+    successOrNot : boolean;
+    message:string;
     data: T;
 
 }
