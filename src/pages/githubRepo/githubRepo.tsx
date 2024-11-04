@@ -5,7 +5,10 @@ import {
     ChevronDownIcon,
 } from "@radix-ui/react-icons";
 import React from "react";
-
+import { useLanguage } from "../../stores/queries/language/queries";
+// import { mockLanguages } from "../../mocks/language";
+import { Language } from "../../interfaces/entities/language";
+import { useGithubRepositories } from "../../stores/queries/repositories";
 
 type SelectItemProps = {
     value: string;
@@ -14,11 +17,41 @@ type SelectItemProps = {
 };
 
 export const GithubRepoRandom = () => {
+    const { data: languageData, isLoading: isLoadingLanguages, error: languageError } = useLanguage();
 
+    const { data: repositoriesData, isLoading: isLoadingRepositories, error: repositoryError } = useGithubRepositories();
+    const isLoading = isLoadingLanguages || isLoadingRepositories;
+
+    if (!languageData || !repositoriesData) {
+        return <div>No data available.</div>;
+    }
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+    if (languageError) {
+        return <div>Error fetching languages: {languageError.message}</div>;
+    }
+
+    if (repositoryError) {
+        return <div>Error fetching repositories: {repositoryError.message}</div>;
+    }
+
+    if (!languageData || !repositoriesData) {
+        return <div>No data available.</div>;
+    }
+
+    if (!Array.isArray(languageData)) {
+        console.error('languagesArray is not an array or is undefined:', languageData);
+        return <div>No data available.</div>;
+    }
+    const languagesArray = languageData;
+ 
     const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
-        ({ children, className, ...props }, forwardedRef) => {
+        ({ children, className, value, ...props }, forwardedRef) => {
+            const validValue = value || "(Unknown)";
             return (
                 <Select.Item
+                    value={validValue}
                     className={className ? `${styles.Item} ${className}` : styles.Item}
                     {...props}
                     ref={forwardedRef}
@@ -31,6 +64,8 @@ export const GithubRepoRandom = () => {
             );
         }
     );
+    SelectItem.displayName = "SelectItem"; // Add this for better debugging
+
 
     return (
         <>
@@ -46,17 +81,22 @@ export const GithubRepoRandom = () => {
                         <Select.Viewport className={styles.Viewport}>
                             <Select.Group>
                                 <Select.Label className={styles.Label}>Select Here </Select.Label>
-                                <SelectItem value="apple">Apple</SelectItem>
-                                <SelectItem value="banana">Banana</SelectItem>
-                                <SelectItem value="blueberry">Blueberry</SelectItem>
-                                <SelectItem value="grapes">Grapes</SelectItem>
-                                <SelectItem value="pineapple">Pineapple</SelectItem>
+                                {languagesArray.map((language: Language, index: number) => {
+                                    const value = language.value || ""; // Use the original value here
+                                    return (
+                                        <SelectItem key={index} value={value}>
+                                            {language.title || "Unknown Language"} {/* Handle empty title */}
+                                        </SelectItem>
+                                    );
+                                })}
                             </Select.Group>
                             <Select.Separator className={styles.Separator} />
                         </Select.Viewport>
                     </Select.Content>
                 </Select.Portal>
             </Select.Root>
+
+
         </>
     );
 };
