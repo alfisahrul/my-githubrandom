@@ -1,5 +1,3 @@
-// get data from fetching model
-
 import { useQuery } from "@tanstack/react-query"
 import { getRepositories } from "./api"
 import { CommonResponse } from "../../../utils/common"

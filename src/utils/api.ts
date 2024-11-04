@@ -4,8 +4,8 @@ import { CommonResponse } from './common';
 const ACCESS_TOKEN = import.meta.env.VITE_GITHUB_ACCESS_TOKEN;
 
 export const api: AxiosInstance = axios.create({
-    baseURL: 'https://github.com', // Set your API base URL here
-    timeout: 5000,                     // Set a timeout for requests
+    baseURL: 'https://github.com', 
+    timeout: 5000,                    
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/vnd.github.v3+json'

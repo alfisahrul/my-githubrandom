@@ -1,5 +1,3 @@
-// fetching data from url
-
 import { GithubRepositories } from "../../../interfaces/entities/repositories";
 import { apiGet } from "../../../utils/api";
 import { CommonResponse } from "../../../utils/common";

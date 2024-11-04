@@ -64,7 +64,7 @@ export const GithubRepoRandom = () => {
             );
         }
     );
-    SelectItem.displayName = "SelectItem"; // Add this for better debugging
+    SelectItem.displayName = "SelectItem"; 
 
 
     return (
@@ -82,10 +82,10 @@ export const GithubRepoRandom = () => {
                             <Select.Group>
                                 <Select.Label className={styles.Label}>Select Here </Select.Label>
                                 {languagesArray.map((language: Language, index: number) => {
-                                    const value = language.value || ""; // Use the original value here
+                                    const value = language.value || "";
                                     return (
                                         <SelectItem key={index} value={value}>
-                                            {language.title || "Unknown Language"} {/* Handle empty title */}
+                                            {language.title || "Unknown Language"} 
                                         </SelectItem>
                                     );
                                 })}
