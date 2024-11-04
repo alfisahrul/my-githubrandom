@@ -1,14 +1,28 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CommonResponse } from './common';
 
+const ACCESS_TOKEN = import.meta.env.VITE_GITHUB_ACCESS_TOKEN;
+
 export const api: AxiosInstance = axios.create({
-    baseURL: 'https://api.github.com', // Set your API base URL here
+    baseURL: 'https://github.com', // Set your API base URL here
     timeout: 5000,                     // Set a timeout for requests
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/vnd.github.v3+json'
     }
 });
+
+api.interceptors.request.use(
+    (config) => {
+        if(ACCESS_TOKEN) {
+            config.headers['Authorization'] = `Bearer ${ACCESS_TOKEN}`;
+        }
+        return config;
+    },
+    (error) =>{
+        return Promise.reject(error);
+    }
+)
 
 export async function apiRequest<T>(config: AxiosRequestConfig): Promise<CommonResponse<T>> {
     try {
