@@ -1,5 +1,4 @@
 export interface Language{
-    id:number;
-    tittle:string;
+    title:string;
     value:string;
 }
