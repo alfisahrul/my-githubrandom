@@ -1,10 +1,16 @@
-export interface GithubRepositories {
-    id : number;
-    name : string;
-    forkCount:number;
-    stars:number;
-    language:string
-    openIssues:number;
-    description:string;
+export interface GithubRepository {
+    id: number;
+    fullName: string;
+    description: string;
+    stargazersCount: number;
+    forksCount: number;
+    openIssuesCount: number;
+    language: string;
 
+}
+
+export interface GithubRepositories {
+    totalCount: number;
+    incomplateResults: boolean;
+    items: GithubRepository[];
 }
