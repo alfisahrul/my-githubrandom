@@ -4,11 +4,12 @@ import {
     CheckIcon,
     ChevronDownIcon,
 } from "@radix-ui/react-icons";
-import React from "react";
+import React, { useState } from "react";
 import { useLanguage } from "../../stores/queries/language/queries";
 // import { mockLanguages } from "../../mocks/language";
 import { Language } from "../../interfaces/entities/language";
 import { useGithubRepositories } from "../../stores/queries/repositories";
+import { CardStyled } from "../../components/ui/Card";
 
 type SelectItemProps = {
     value: string;
@@ -18,8 +19,8 @@ type SelectItemProps = {
 
 export const GithubRepoRandom = () => {
     const { data: languageData, isLoading: isLoadingLanguages, error: languageError } = useLanguage();
-
     const { data: repositoriesData, isLoading: isLoadingRepositories, error: repositoryError } = useGithubRepositories();
+
     const isLoading = isLoadingLanguages || isLoadingRepositories;
 
     if (!languageData || !repositoriesData) {
@@ -45,7 +46,9 @@ export const GithubRepoRandom = () => {
         return <div>No data available.</div>;
     }
     const languagesArray = languageData;
- 
+    const repositoriesArray = repositoriesData.data.items; // Ensure items is correctly accessed
+
+    
     const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         ({ children, className, value, ...props }, forwardedRef) => {
             const validValue = value || "(Unknown)";
@@ -64,8 +67,8 @@ export const GithubRepoRandom = () => {
             );
         }
     );
+    
     SelectItem.displayName = "SelectItem"; 
-
 
     return (
         <>
@@ -96,7 +99,11 @@ export const GithubRepoRandom = () => {
                 </Select.Portal>
             </Select.Root>
 
-
+            <div>
+                {repositoriesArray.map((repo, index) => (
+                    <CardStyled key={index} repo={repo} /> // Pass repository data to CardStyled
+                ))}
+            </div>
         </>
     );
 };
