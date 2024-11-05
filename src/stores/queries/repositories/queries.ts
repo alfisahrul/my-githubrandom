@@ -4,8 +4,8 @@ import { CommonResponse } from "../../../utils/common"
 import { GithubRepositories } from "../../../interfaces/entities/repositories"
 
 export const useGithubRepositories = () => {
-    return useQuery<CommonResponse<GithubRepositories[]>>({
+    return useQuery<CommonResponse<GithubRepositories>>({
         queryKey:["githubRepositories"],
-        queryFn : () => getRepositories(),
+        queryFn : getRepositories,
     })
 }
