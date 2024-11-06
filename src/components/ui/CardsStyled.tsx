@@ -77,10 +77,6 @@ const Description = styled.p`
   text-align: center;
 `;
 
-// type CardStyledProps = {
-//   repo: GithubRepository;
-// };
-
 export const CardStyled: React.FC = () => {
   const selectedLanguage = useLanguageStore((state) => state.selectedLanguage);
   const { data: repositoriesData } = useGithubRepositories(selectedLanguage);

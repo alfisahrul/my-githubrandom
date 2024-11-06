@@ -4,7 +4,7 @@ import {
     CheckIcon,
     ChevronDownIcon,
 } from "@radix-ui/react-icons";
-import React, { useState } from "react";
+import React from "react";
 import { useLanguage } from "../../stores/queries/language/queries";
 // import { mockLanguages } from "../../mocks/language";
 import { Language } from "../../interfaces/entities/language";
@@ -99,7 +99,7 @@ export const GithubRepoRandom = () => {
             <div>
                 {repositoriesArray.length > 0 ? (
                     // Select a random repository and pass it to CardStyled
-                    <CardStyled repo={repositoriesArray[Math.floor(Math.random() * repositoriesArray.length)]} />
+                    <CardStyled />
                 ) : (
                     <div>No repository found.</div>
                 )}
