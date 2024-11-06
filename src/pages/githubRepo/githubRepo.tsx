@@ -9,7 +9,8 @@ import { useLanguage } from "../../stores/queries/language/queries";
 // import { mockLanguages } from "../../mocks/language";
 import { Language } from "../../interfaces/entities/language";
 import { useGithubRepositories } from "../../stores/queries/repositories";
-import { CardStyled } from "../../components/ui/Card";
+import { CardStyled } from "../../components/ui/CardsStyled";
+import { useLanguageStore } from "../../stores/states/languageStore";
 
 type SelectItemProps = {
     value: string;
@@ -19,36 +20,35 @@ type SelectItemProps = {
 
 export const GithubRepoRandom = () => {
     const { data: languageData, isLoading: isLoadingLanguages, error: languageError } = useLanguage();
-    const { data: repositoriesData, isLoading: isLoadingRepositories, error: repositoryError } = useGithubRepositories();
+    const selectedLanguage = useLanguageStore((state) => state.selectedLanguage);
+    const setSelectedLanguage = useLanguageStore((state) => state.setSelectedLanguage);
+    const { data: repositoriesData, isLoading: isLoadingRepositories, error: repositoryError, refetch } = useGithubRepositories(selectedLanguage);
+
 
     const isLoading = isLoadingLanguages || isLoadingRepositories;
 
-    if (!languageData || !repositoriesData) {
-        return <div>No data available.</div>;
-    }
     if (isLoading) {
         return <div>Loading...</div>;
     }
     if (languageError) {
         return <div>Error fetching languages: {languageError.message}</div>;
     }
-
     if (repositoryError) {
-        return <div>Error fetching repositories: {repositoryError.message}</div>;
+        return <div>Error fetching repositories: {repositoryError.message} </div>;
     }
+    const repositoriesArray = repositoriesData?.data?.items || [];
+    const languagesArray = languageData?.data || []; // Access the data property to get the array of languages
 
-    if (!languageData || !repositoriesData) {
-        return <div>No data available.</div>;
-    }
 
-    if (!Array.isArray(languageData)) {
+    if (!Array.isArray(languagesArray)) {
         console.error('languagesArray is not an array or is undefined:', languageData);
         return <div>No data available.</div>;
     }
-    const languagesArray = languageData;
-    const repositoriesArray = repositoriesData.data.items; // Ensure items is correctly accessed
 
-    
+    const handleLanguageSelect = (value: string) => {
+        setSelectedLanguage(value);
+        if (value) refetch(); // Trigger re-fetch of repositories when language changes
+    };
     const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         ({ children, className, value, ...props }, forwardedRef) => {
             const validValue = value || "(Unknown)";
@@ -67,12 +67,12 @@ export const GithubRepoRandom = () => {
             );
         }
     );
-    
-    SelectItem.displayName = "SelectItem"; 
+
+    SelectItem.displayName = "SelectItem";
 
     return (
         <>
-            <Select.Root>
+            <Select.Root onValueChange={handleLanguageSelect}>
                 <Select.Trigger className={styles.Trigger} aria-label="Language">
                     <Select.Value placeholder="Select a Language" />
                     <Select.Icon className={styles.Icon}>
@@ -84,14 +84,11 @@ export const GithubRepoRandom = () => {
                         <Select.Viewport className={styles.Viewport}>
                             <Select.Group>
                                 <Select.Label className={styles.Label}>Select Here </Select.Label>
-                                {languagesArray.map((language: Language, index: number) => {
-                                    const value = language.value || "";
-                                    return (
-                                        <SelectItem key={index} value={value}>
-                                            {language.title || "Unknown Language"} 
-                                        </SelectItem>
-                                    );
-                                })}
+                                {languagesArray.map((language: Language, index: number) => (
+                                    <SelectItem key={index} value={language.value || ""}>
+                                        {language.title || "Unknown Language"}
+                                    </SelectItem>
+                                ))}
                             </Select.Group>
                             <Select.Separator className={styles.Separator} />
                         </Select.Viewport>
@@ -100,9 +97,12 @@ export const GithubRepoRandom = () => {
             </Select.Root>
 
             <div>
-                {repositoriesArray.map((repo, index) => (
-                    <CardStyled key={index} repo={repo} /> // Pass repository data to CardStyled
-                ))}
+                {repositoriesArray.length > 0 ? (
+                    // Select a random repository and pass it to CardStyled
+                    <CardStyled repo={repositoriesArray[Math.floor(Math.random() * repositoriesArray.length)]} />
+                ) : (
+                    <div>No repository found.</div>
+                )}
             </div>
         </>
     );
