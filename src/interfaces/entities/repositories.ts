@@ -6,6 +6,7 @@ export interface GithubRepository {
     forksCount: number;
     openIssuesCount: number;
     language: string;
+    repoUrl:string;
 
 }
 
