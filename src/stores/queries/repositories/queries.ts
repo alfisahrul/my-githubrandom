@@ -3,9 +3,10 @@ import { getRepositories } from "./api"
 import { CommonResponse } from "../../../utils/common"
 import { GithubRepositories } from "../../../interfaces/entities/repositories"
 
-export const useGithubRepositories = () => {
+export const useGithubRepositories = (language:string) => {
     return useQuery<CommonResponse<GithubRepositories>>({
-        queryKey:["githubRepositories"],
-        queryFn : getRepositories,
+        queryKey:["githubRepositories",language],
+        queryFn : () => getRepositories(language),
+        enabled: !!language && language.trim() !== "",
     })
 }
