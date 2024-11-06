@@ -1,6 +1,31 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a from roadmapsh.
+https://roadmap.sh/projects/github-random-repo
+
+How to run this project
+
+clone this repository
+
+`$ git clone https://github.com/alfisahrul/my-githubrandom.git`
+
+using yarn to install 
+
+` yarn add`
+
+using yarn to run web
+
+` yarn dev`
+
+####Library  (-)
+
+- Zustand
+- Tanstack/react-query
+- emotion/styled
+
+## Objective
+The main goals of this project were to refresh my knowledge fetching data from external APIs with React and styling with Tailwind. However, due to the limitaions of the GitHub API, the project evolved to focus on implementing a caching system to avoid hitting the API limits. This change made the "Refresh" functionality and changing language almost instantaneous without the need to make additional API requests, which became the top priority after discovering the issue.
+
 
 Currently, two official plugins are available:
 
