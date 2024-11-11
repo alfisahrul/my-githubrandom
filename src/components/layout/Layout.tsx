@@ -1,16 +1,11 @@
 import styled from '@emotion/styled';
 
-
-export const ColButtonWrap = styled.div`
-  > button + button {
-    margin-top: 16px;
-  }
-`;
-export const ButtonWrap = styled(ColButtonWrap)`
-  width: 100%;
-  padding: 16px 20px 36px 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #ffff 9.13%);
-  position: absolute;
-  bottom: 0;
-  z-index: var(--bottom-bar-z-index);
+export const BackgroundLayer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: var(--dim-z-index);
 `;
