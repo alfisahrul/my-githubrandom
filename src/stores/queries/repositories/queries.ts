@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { getRepositories } from "./api"
 import { CommonResponse } from "../../../utils/common"
-import { GithubRepositories } from "../../../interfaces/entities/repositories"
+import { GithubRepositories } from "../../../interfaces/repositories"
 
 export const useGithubRepositories = (language:string) => {
     return useQuery<CommonResponse<GithubRepositories>>({

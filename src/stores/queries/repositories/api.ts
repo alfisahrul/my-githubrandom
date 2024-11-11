@@ -1,4 +1,4 @@
-import { GithubRepositories } from "../../../interfaces/entities/repositories";
+import { GithubRepositories } from "../../../interfaces/repositories";
 import { apiGet } from "../../../utils/api";
 import { CommonResponse } from "../../../utils/common";
 

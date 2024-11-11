@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getLanguage } from "./api";
-import { Language } from "../../../interfaces/entities/language";
+import { Language } from "../../../interfaces/language";
 import { CommonResponse } from "../../../utils/common";
 
 export const useLanguage = () => {

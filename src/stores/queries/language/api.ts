@@ -1,4 +1,4 @@
-import { Language } from "../../../interfaces/entities/language";
+import { Language } from "../../../interfaces/language";
 import { CommonResponse } from "../../../utils/common";
 import { apiGet } from "../../../utils/api";
 
