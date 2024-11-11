@@ -5,7 +5,6 @@ function App() {
 
   return (
     <>
-      <h1>Github Random Repo</h1>
       <GithubRepoRandom/>
     </>
   )
