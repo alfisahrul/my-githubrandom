@@ -3,21 +3,21 @@ import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 interface LoadingProps {
-    isLoading: boolean;
-    loadingMessage: string;
+  isLoading: boolean;
+  loadingMessage: string;
 }
 
 const LoadingSpinner = ({ isLoading, loadingMessage }: LoadingProps) => {
-    return (
-        <>
-            {isLoading && (
-                <Background>
-                    <Loading />
-                    <p>{loadingMessage}</p>
-                </Background>
-            )}
-        </>
-    )
+  return (
+    <>
+      {isLoading && (
+        <Background>
+          <Loading />
+          <p>{loadingMessage}</p>
+        </Background>
+      )}
+    </>
+  )
 }
 
 export default LoadingSpinner;
