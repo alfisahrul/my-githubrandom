@@ -7,7 +7,7 @@ interface CardProps {
   stargazersCount: number;
   forksCount: number;
   openIssuesCount: number;
-  repoUrl: string;
+  htmlUrl: string;
 }
 
 const Card = ({
@@ -17,6 +17,7 @@ const Card = ({
   stargazersCount,
   forksCount,
   openIssuesCount,
+  htmlUrl
 }: CardProps) => {
 
   return (
@@ -30,6 +31,9 @@ const Card = ({
           <Stat>🍴 {forksCount}</Stat>
           <Stat>🕒 {openIssuesCount}</Stat>
         </StatsContainer>
+        <Url href={htmlUrl} target="_blank" rel="noopener noreferrer">
+          {htmlUrl}
+        </Url>
       </Layout>
     </Container>
   );
@@ -91,6 +95,19 @@ const Description = styled.p`
   color: #ccc;
   margin: 10px 0 20px;
   text-align: center;
+`;
+
+const Url = styled.a`
+  font-size: 14px;
+  color: #1e90ff;
+  margin: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: underline;
+
+  &:hover {
+    color: #00bfff;
+  }
 `;
 
 export default Card;

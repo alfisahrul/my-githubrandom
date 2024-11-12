@@ -1,16 +1,15 @@
 import * as Select from "@radix-ui/react-select";
-import styles from "./style.module.css"
-import {
-    CheckIcon,
-    ChevronDownIcon,
-} from "@radix-ui/react-icons";
-import React from "react";
+import styles from "./style.module.css";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
+import React, { Suspense, useEffect, useMemo } from "react";
 import { useLanguage } from "../../stores/queries/language/queries";
-// import { mockLanguages } from "../../mocks/language";
-import { Language } from "../../interfaces/entities/language";
+import { Language } from "../../interfaces/language";
 import { useGithubRepositories } from "../../stores/queries/repositories";
-import { CardStyled } from "../../components/ui/CardsStyled";
 import { useLanguageStore } from "../../stores/states/languageStore";
+import { useRepositoriesStore } from "../../stores/states/repositoriesStore";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import { ErrorBoundary } from "react-error-boundary";
+import ButtonStyled from "../../components/ui/Button";
 
 type SelectItemProps = {
     value: string;
@@ -18,37 +17,47 @@ type SelectItemProps = {
     className?: string;
 };
 
+const Card = React.lazy(() => import("../../components/ui/Card"));
+
 export const GithubRepoRandom = () => {
-    const { data: languageData, isLoading: isLoadingLanguages, error: languageError } = useLanguage();
     const selectedLanguage = useLanguageStore((state) => state.selectedLanguage);
-    const setSelectedLanguage = useLanguageStore((state) => state.setSelectedLanguage);
-    const { data: repositoriesData, isLoading: isLoadingRepositories, error: repositoryError, refetch } = useGithubRepositories(selectedLanguage);
+    const { selectedRepo, selectRandomRepo } = useRepositoriesStore();
 
+    const {
+        data: languageData,
+        isError: languageError,
+        isLoading: isLanguagesLoading,
+    } = useLanguage();
 
-    const isLoading = isLoadingLanguages || isLoadingRepositories;
+    const {
+        data: repositoriesData,
+        isError: repositoryError,
+        refetch,
+    } = useGithubRepositories(selectedLanguage);
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    if (languageError || repositoryError) {
+        throw new Error("Failed to fetch data. Please try again.");
     }
-    if (languageError) {
-        return <div>Error fetching languages: {languageError.message}</div>;
-    }
-    if (repositoryError) {
-        return <div>Error fetching repositories: {repositoryError.message} </div>;
-    }
-    const repositoriesArray = repositoriesData?.data?.items || [];
-    const languagesArray = languageData?.data || []; // Access the data property to get the array of languages
 
+    const repositoriesArray = useMemo(() => repositoriesData?.data.items || [], [
+        repositoriesData,
+    ]);
 
-    if (!Array.isArray(languagesArray)) {
-        console.error('languagesArray is not an array or is undefined:', languageData);
-        return <div>No data available.</div>;
-    }
+    console.log(repositoriesArray);
+
+    useEffect(() => {
+        if (repositoriesArray.length > 0) {
+            selectRandomRepo(repositoriesArray);
+        }
+    }, [repositoriesArray, selectRandomRepo]);
+
+    const languagesArray = languageData?.data || [];
 
     const handleLanguageSelect = (value: string) => {
-        setSelectedLanguage(value);
+        useLanguageStore.getState().setSelectedLanguage(value);  // Using Zustand store action to set the selected language
         if (value) refetch(); // Trigger re-fetch of repositories when language changes
     };
+
     const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         ({ children, className, value, ...props }, forwardedRef) => {
             const validValue = value || "(Unknown)";
@@ -72,6 +81,7 @@ export const GithubRepoRandom = () => {
 
     return (
         <>
+            <h1>Github Random Repo</h1>
             <Select.Root onValueChange={handleLanguageSelect}>
                 <Select.Trigger className={styles.Trigger} aria-label="Language">
                     <Select.Value placeholder="Select a Language" />
@@ -83,7 +93,7 @@ export const GithubRepoRandom = () => {
                     <Select.Content className={styles.Content}>
                         <Select.Viewport className={styles.Viewport}>
                             <Select.Group>
-                                <Select.Label className={styles.Label}>Select Here </Select.Label>
+                                <Select.Label className={styles.Label}>Select Here</Select.Label>
                                 {languagesArray.map((language: Language, index: number) => (
                                     <SelectItem key={index} value={language.value || ""}>
                                         {language.title || "Unknown Language"}
@@ -97,16 +107,29 @@ export const GithubRepoRandom = () => {
             </Select.Root>
 
             <div>
-                {repositoriesArray.length > 0 ? (
-                    // Select a random repository and pass it to CardStyled
-                    <CardStyled />
-                ) : (
-                    <div>No repository found.</div>
-                )}
+                <ErrorBoundary fallback={<div>Failed to load repository</div>}>
+                    {selectedRepo ? (
+                        <Suspense fallback={<LoadingSpinner isLoading loadingMessage="Please Wait  .... " />}>
+                            <Card
+                                fullName={selectedRepo?.fullName || ""}
+                                description={selectedRepo?.description || "No description available"}
+                                language={selectedRepo?.language || "Unknown"}
+                                stargazersCount={selectedRepo?.stargazersCount ?? 0}
+                                forksCount={selectedRepo?.forksCount ?? 0}
+                                openIssuesCount={selectedRepo?.openIssuesCount ?? 0}
+                                htmlUrl={selectedRepo?.htmlUrl || ""}
+                            />
+                        </Suspense>
+                    ) : (
+                        <div>No repository found.</div>
+                    )}
+                </ErrorBoundary>
             </div>
+
+            <ButtonStyled
+                onClick={() => selectRandomRepo(repositoriesArray)}
+                text="Refresh"
+            />
         </>
     );
 };
-
-
-
