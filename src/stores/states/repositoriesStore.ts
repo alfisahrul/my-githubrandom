@@ -1,37 +1,21 @@
-import { create } from "zustand";
-import { immer } from "zustand/middleware/immer";
-import { getRepositories } from "../../stores/queries/repositories/api";
-import { GithubRepositories } from "../../interfaces/entities/repositories";
+import { create } from 'zustand';
+import { immer } from 'zustand/middleware/immer';
+import { GithubRepository } from "../../interfaces/repositories";
 
-type RepositoriesState = {
-    repositoriesData: GithubRepositories | null;
-    error: string | null;
-    isLoading: boolean;
-    fetchRepositories: (language: string) => Promise<void>;
-};
+interface RepositoriesState {
+    selectedRepo: GithubRepository | null;
+    selectRandomRepo: (repositoriesData: GithubRepository[]) => void;
+}
 
-export const useRepositoriesStore = create<RepositoriesState>()(
-    immer((set) => ({
-        repositoriesData: null,
-        error: null,
-        isLoading: false,
+export const useRepositoriesStore = create(
+    immer<RepositoriesState>((set) => ({
+        selectedRepo: null,
 
-        fetchRepositories: async (language: string) => {
-            set((state) => {
-                state.isLoading = true;
-                state.error = null;
-            });
-            try {
-                const response = await getRepositories(language);
-                set((state) => {
-                    state.repositoriesData = response.data; // Store data in repositoriesData
-                    state.isLoading = false;
-                });
-            } catch (error) {
-                set((state) => {
-                    state.error = error instanceof Error ? error.message : "An error occurred";
-                    state.isLoading = false;
-                });
+        // Function to select a random repository from fetched data
+        selectRandomRepo: (repositoriesData) => {
+            if (repositoriesData.length > 0) {
+                const randomRepo = repositoriesData[Math.floor(Math.random() * repositoriesData.length)];
+                set({ selectedRepo: randomRepo });
             }
         },
     }))

@@ -26,7 +26,6 @@ export const GithubRepoRandom = () => {
     const {
         data: languageData,
         isError: languageError,
-        isLoading: isLanguagesLoading,
     } = useLanguage();
 
     const {
